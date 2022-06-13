@@ -48,3 +48,28 @@
     font-size: 1.6rem;
     transform: scale(1.06);
 }
+
+#player-turn-display {
+    margin-bottom: 2rem;
+    color: var(--font-color);
+    font-size: 2rem;
+}
+
+#board {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(75px, 100px));
+    grid-template-rows: repeat(3, minmax(75px, 100px));
+    gap: 2px;
+}
+
+.cell {
+    color: var(--font-color);
+    background-color: var(--bg-black-secondary);
+    font-size: 4rem;
+    text-align: center;
+    line-height: 100px;
+}
+
+.cell:hover {
+    transform: scale(1.02);
+}
