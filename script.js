@@ -33,3 +33,23 @@ const displayController = (() => {
     });
     startBtn.addEventListener("click", displayGameBoardScreen);
 })();
+
+const gameBoard = (() => {
+    let X = true;
+    const cells = document.querySelectorAll(".cell");
+
+    const switchTurns = () => {
+        X = !X;
+    }
+
+    const markCell = (e) => {
+        const currentTurn = X ? 'X' : 'O';
+        e.target.innerHTML = currentTurn;
+        switchTurns();
+    }
+
+    cells.forEach(cell => {
+        // once:true so that the move can't be alter once clicked
+        cell.addEventListener("click", markCell, { once: true });
+    });
+})();
