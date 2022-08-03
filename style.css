@@ -10,7 +10,7 @@
     --font-color: hsl(38, 95%, 77%);
 }
 
-#container {
+.container {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -19,7 +19,7 @@
     background-color: var(--bg-black-primary);
 }
 
-#modes {
+.modes-container {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -49,13 +49,18 @@
     transform: scale(1.06);
 }
 
-#player-turn-display {
+.board {
+    display: none;
+}
+
+.player-turn-display {
     margin-bottom: 2rem;
     color: var(--font-color);
     font-size: 2rem;
+    text-align: center;
 }
 
-#board {
+.cells {
     display: grid;
     grid-template-columns: repeat(3, minmax(75px, 100px));
     grid-template-rows: repeat(3, minmax(75px, 100px));
@@ -72,4 +77,13 @@
 
 .cell:hover {
     transform: scale(1.02);
+}
+
+/* utils  */
+.hide {
+    display: none;
+}
+
+.show {
+    display: block;
 }
