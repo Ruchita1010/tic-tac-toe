@@ -11,7 +11,7 @@
 
 <body>
     <div class="container">
-        <div class="modes-container">
+        <div class="modes-screen">
             <div class="mode" id="two-player">
                 <span>TWO PLAYER MODE</span>
                 <img src="./images/two-player-mode.png" alt="Wounded two Players in a boxing ring">
@@ -21,18 +21,28 @@
                 <img src="./images/bot-mode.png" alt="A robot like machine emitting steam">
             </div>
         </div>
-        <div class="board">
+        <div class="name-input-screen">
+            <div class="two-player-mode-input input-name">
+                <input type="text" name="player-one" id="player-one">
+                <input type="text" name="player-two" id="player-two">
+            </div>
+            <div class="bot-mode-input input-name">
+                <input type="text" name="only-player" id="only-player">
+            </div>
+            <input type="button" value="Start" id="start-btn">
+        </div>
+        <div class="game-board-screen">
             <p class="player-turn-display">Player X's Turn</p>
-            <div class="cells">
-                <div class="cell data-cell">X</div>
-                <div class="cell data-cell">O</div>
-                <div class="cell data-cell"></div>
-                <div class="cell data-cell"></div>
-                <div class="cell data-cell"></div>
-                <div class="cell data-cell"></div>
-                <div class="cell data-cell"></div>
-                <div class="cell data-cell"></div>
-                <div class="cell data-cell"></div>
+            <div class="board">
+                <div class="cell" data-cell>X</div>
+                <div class="cell" data-cell>O</div>
+                <div class="cell" data-cell></div>
+                <div class="cell" data-cell></div>
+                <div class="cell" data-cell></div>
+                <div class="cell" data-cell></div>
+                <div class="cell" data-cell></div>
+                <div class="cell" data-cell></div>
+                <div class="cell" data-cell></div>
             </div>
         </div>
     </div>

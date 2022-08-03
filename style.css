@@ -19,7 +19,7 @@
     background-color: var(--bg-black-primary);
 }
 
-.modes-container {
+.modes-screen {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -41,6 +41,7 @@
 .mode img {
     width: 100%;
     height: 100%;
+    pointer-events: none;
 }
 
 .mode:hover {
@@ -49,7 +50,9 @@
     transform: scale(1.06);
 }
 
-.board {
+.name-input-screen,
+.game-board-screen,
+.input-name {
     display: none;
 }
 
@@ -60,7 +63,7 @@
     text-align: center;
 }
 
-.cells {
+.board {
     display: grid;
     grid-template-columns: repeat(3, minmax(75px, 100px));
     grid-template-rows: repeat(3, minmax(75px, 100px));
