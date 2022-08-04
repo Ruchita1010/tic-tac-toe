@@ -7,7 +7,7 @@ const displayController = (() => {
     const twoPlayerModeInput = document.querySelector(".two-player-mode-input");
     const botModeInput = document.querySelector(".bot-mode-input");
     const startBtn = document.querySelector("#start-btn");
-    const returnBtn = document.querySelector("#return-btn");
+    const returnBtns = document.querySelectorAll(".return-btn");
 
     const displayNameInputScreen = (e) => {
         modesScreen.classList.toggle("hide");
@@ -37,7 +37,10 @@ const displayController = (() => {
         mode.addEventListener("click", displayNameInputScreen);
     });
     startBtn.addEventListener("click", displayGameBoardScreen);
-    returnBtn.addEventListener("click", returntoMainScreen);
+    // For return button on both the screens
+    returnBtns.forEach(returnBtn => {
+        returnBtn.addEventListener("click", returntoMainScreen);
+    });
 })();
 
 const gameBoard = (() => {

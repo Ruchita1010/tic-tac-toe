@@ -115,7 +115,7 @@ input[id="start-btn"] {
     margin-top: 4rem;
 }
 
-input[id="return-btn"] {
+input[type="button"].return-btn {
     width: clamp(3rem, 30%, 8rem);
     position: absolute;
     top: 0;
