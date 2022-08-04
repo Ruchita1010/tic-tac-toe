@@ -145,3 +145,9 @@ input[id="start-btn"] {
 .show {
     display: block;
 }
+
+.show-flex {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

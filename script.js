@@ -10,20 +10,20 @@ const displayController = (() => {
 
     const displayNameInputScreen = (e) => {
         modesScreen.classList.toggle("hide");
-        nameInputScreen.classList.toggle("show");
+        nameInputScreen.classList.toggle("show-flex");
         const mode = e.target.id;
         switch (mode) {
             case "two-player":
-                twoPlayerModeInput.classList.toggle("show");
+                twoPlayerModeInput.classList.toggle("show-flex");
                 break;
             case "bot":
-                botModeInput.classList.toggle("show");
+                botModeInput.classList.toggle("show-flex");
                 break;
         }
     }
 
     const displayGameBoardScreen = () => {
-        nameInputScreen.classList.toggle("show");
+        nameInputScreen.classList.toggle("show-flex");
         gameBoardScreen.classList.toggle("show");
     }
 
