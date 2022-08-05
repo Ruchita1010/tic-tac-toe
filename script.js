@@ -1,13 +1,32 @@
+const inputController = (() => {
+    let playerX = null, playerO = null;
+    const setplayersName = (playerXInput, playerOInput) => {
+        playerX = playerXInput;
+        playerO = playerOInput;
+    }
+
+    const getPlayersName = () => {
+        return { playerX, playerO };
+    }
+
+    return {
+        setplayersName,
+        getPlayersName,
+    }
+})();
+
 const displayController = (() => {
     // Getting all the required HTML elements
     const modesScreen = document.querySelector(".modes-screen");
     const gameBoardScreen = document.querySelector(".game-board-screen");
-    const modes = document.querySelectorAll(".mode");
     const nameInputScreen = document.querySelector(".name-input-screen");
     const twoPlayerModeInput = document.querySelector(".two-player-mode-input");
     const botModeInput = document.querySelector(".bot-mode-input");
-    const startBtn = document.querySelector("#start-btn");
-    const returnBtns = document.querySelectorAll(".return-btn");
+    const playerTurnDisplay = document.querySelector(".player-turn-display").getElementsByTagName("span")[0];
+
+    const updatePlayerTurn = (nextTurn) => {
+        playerTurnDisplay.innerText = nextTurn;
+    }
 
     const displayNameInputScreen = (e) => {
         modesScreen.classList.toggle("hide");
@@ -27,38 +46,68 @@ const displayController = (() => {
         nameInputScreen.classList.toggle("show-flex");
         gameBoardScreen.classList.toggle("show");
     }
-    
+
     const returntoMainScreen = () => {
         location.reload();
     }
 
-    // Event Listeners
-    modes.forEach(mode => {
-        mode.addEventListener("click", displayNameInputScreen);
-    });
-    startBtn.addEventListener("click", displayGameBoardScreen);
-    // For return button on both the screens
-    returnBtns.forEach(returnBtn => {
-        returnBtn.addEventListener("click", returntoMainScreen);
-    });
+    return {
+        updatePlayerTurn,
+        displayNameInputScreen,
+        displayGameBoardScreen,
+        returntoMainScreen,
+    }
 })();
 
 const gameBoard = (() => {
-    let X = true;
+    let turnOfX = true;
+
     const cells = document.querySelectorAll(".cell");
+    const { playerX, playerO } = inputController.getPlayersName();
+
+    const getTurn = () => {
+        return turnOfX ? playerX : playerO;
+    }
 
     const switchTurns = () => {
-        X = !X;
+        turnOfX = !turnOfX;
     }
 
     const markCell = (e) => {
-        const currentTurn = X ? 'X' : 'O';
-        e.target.innerHTML = currentTurn;
+        const currentTurn = getTurn();
+        e.target.innerHTML = currentTurn === playerX ? 'X' : 'O';
         switchTurns();
+        const nextTurn = getTurn();
+        displayController.updatePlayerTurn(nextTurn);
     }
 
     cells.forEach(cell => {
         // once:true so that the move can't be alter once clicked
         cell.addEventListener("click", markCell, { once: true });
     });
-})();
+});
+
+const gameController = (() => {
+    const modes = document.querySelectorAll(".mode");
+    const startBtn = document.querySelector("#start-btn");
+    const returnBtns = document.querySelectorAll(".return-btn");
+    const playerXInput = document.querySelector("#player-x");
+    const playerOInput = document.querySelector("#player-o");
+
+    const startGame = () => {
+        inputController.setplayersName(playerXInput.value, playerOInput.value);
+        displayController.updatePlayerTurn(playerXInput.value);
+        displayController.displayGameBoardScreen();
+        gameBoard();
+    }
+
+    // Event Listeners
+    modes.forEach(mode => {
+        mode.addEventListener("click", displayController.displayNameInputScreen);
+    });
+    startBtn.addEventListener("click", startGame);
+    // For return button on both the screens
+    returnBtns.forEach(returnBtn => {
+        returnBtn.addEventListener("click", displayController.returntoMainScreen);
+    });
+})(); 
