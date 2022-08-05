@@ -59,24 +59,66 @@ const displayController = (() => {
     }
 })();
 
+const win = (() => {
+    const { playerX, playerO } = inputController.getPlayersName();
+
+    const winningCombinations = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+    ];
+
+    const check = (cells, currentTurn) => {
+        return winningCombinations.some(combination => {
+            return combination.every(index => {
+                return cells[index].innerHTML === currentTurn;
+            });
+        });
+    }
+
+    const get = (currentTurn) => {
+        if (currentTurn === 'X') {
+            return playerX;
+        }
+        return playerO;
+    }
+    return {
+        check,
+        get,
+    }
+});
+
 const gameBoard = (() => {
     let turnOfX = true;
 
     const cells = document.querySelectorAll(".cell");
-    const { playerX, playerO } = inputController.getPlayersName();
 
     const getTurn = () => {
-        return turnOfX ? playerX : playerO;
+        return turnOfX ? 'X' : 'O';
     }
 
     const switchTurns = () => {
         turnOfX = !turnOfX;
     }
 
+    const checkWin = (currentTurn) => {
+        const result = win().check(cells, currentTurn);
+        if (result) {
+            const winner = win().get(currentTurn);
+            // console.log(winner);
+        }
+    }
+
     const markCell = (e) => {
         const currentTurn = getTurn();
-        e.target.innerHTML = currentTurn === playerX ? 'X' : 'O';
+        e.target.innerHTML = currentTurn === 'X' ? 'X' : 'O';
         switchTurns();
+        checkWin(currentTurn);
         const nextTurn = getTurn();
         displayController.updatePlayerTurn(nextTurn);
     }
