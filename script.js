@@ -23,6 +23,13 @@ const displayController = (() => {
     const twoPlayerModeInput = document.querySelector(".two-player-mode-input");
     const botModeInput = document.querySelector(".bot-mode-input");
     const playerTurnDisplay = document.querySelector(".player-turn-display").getElementsByTagName("span")[0];
+    const modal = document.querySelector(".modal");
+    const winnerName = document.querySelector(".winner-name");
+
+    const displayWinner = (winner) => {
+        modal.classList.toggle("show-flex");
+        winnerName.innerText = `${winner} Won`;
+    }
 
     const updatePlayerTurn = (nextTurn) => {
         playerTurnDisplay.innerText = nextTurn;
@@ -56,6 +63,7 @@ const displayController = (() => {
         displayNameInputScreen,
         displayGameBoardScreen,
         returntoMainScreen,
+        displayWinner,
     }
 })();
 
@@ -87,6 +95,7 @@ const win = (() => {
         }
         return playerO;
     }
+
     return {
         check,
         get,
@@ -110,7 +119,7 @@ const gameBoard = (() => {
         const result = win().check(cells, currentTurn);
         if (result) {
             const winner = win().get(currentTurn);
-            // console.log(winner);
+            displayController.displayWinner(winner);
         }
     }
 

@@ -156,6 +156,46 @@ input[type="button"].return-btn {
     text-shadow: 1px 1px 4px var(--color-text-primary);
 }
 
+.modal {
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    text-align: center;
+    color: var(--color-text-primary);
+    transition: 1s ease-in-out all;
+    animation: blur 0.3s forwards;
+}
+
+@keyframes blur {
+    0% {
+        backdrop-filter: blur(2px);
+        font-size: 0vmax;
+    }
+
+    25% {
+        backdrop-filter: blur(4px);
+        font-size: 2vmax;
+    }
+
+    50% {
+        backdrop-filter: blur(6px);
+        font-size: 4vmax;
+    }
+
+    75% {
+        backdrop-filter: blur(8px);
+        font-size: 6vmax;
+    }
+
+    100% {
+        backdrop-filter: blur(10px);
+        font-size: 6vmax;
+    }
+}
+
 /* utils  */
 .hide {
     display: none;
