@@ -24,16 +24,27 @@ const displayController = (() => {
     const botModeInput = document.querySelector(".bot-mode-input");
     const playerTurnDisplay = document.querySelector(".player-turn-display").getElementsByTagName("span")[0];
     const modal = document.querySelector(".modal");
-    const winnerName = document.querySelector(".winner-name");
+    const modalMsg = document.querySelector(".modal-msg");
+    const cells = document.querySelectorAll(".cell");
 
-    const displayWinner = (winner) => {
-        winnerName.innerText = `${winner} Won`;
+    const resetGameBoard = () => {
+        cells.forEach(cell => {
+            cell.innerText = "";
+        });
     }
 
-    const displayModal = (winner) => {
+    const displayMessage = (msg) => {
+        console.log(msg)
+        modalMsg.innerText = msg;
+    }
+
+    const displayModal = (msg) => {
         modal.classList.toggle("show-flex");
-        if (winner !== undefined) {
-            displayWinner(winner);
+        if (msg === null) {
+            resetGameBoard();
+        }
+        else {
+            displayMessage(msg);
         }
     }
 
@@ -90,7 +101,7 @@ const win = (() => {
     const check = (cells, currentTurn) => {
         return winningCombinations.some(combination => {
             return combination.every(index => {
-                return cells[index].innerHTML === currentTurn;
+                return cells[index].innerText === currentTurn;
             });
         });
     }
@@ -125,15 +136,25 @@ const gameBoard = (() => {
         const result = win().check(cells, currentTurn);
         if (result) {
             const winner = win().get(currentTurn);
-            displayController.displayModal(winner);
+            displayController.displayModal(`${winner} Won`);
+        }
+    }
+
+    const checkDraw = () => {
+        const result = [...cells].every(cell => {
+            return cell.innerText === 'X' || cell.innerText === 'O';
+        });
+        if (result) {
+            displayController.displayModal(`It's a Draw`);
         }
     }
 
     const markCell = (e) => {
         const currentTurn = getTurn();
-        e.target.innerHTML = currentTurn === 'X' ? 'X' : 'O';
+        e.target.innerText = currentTurn === 'X' ? 'X' : 'O';
         switchTurns();
         checkWin(currentTurn);
+        checkDraw(currentTurn);
         const nextTurn = getTurn();
         displayController.updatePlayerTurn(nextTurn);
     }
@@ -159,6 +180,12 @@ const gameController = (() => {
         gameBoard();
     }
 
+    const resetGame = () => {
+        displayController.displayModal(null);
+        displayController.updatePlayerTurn('X');
+        gameBoard();
+    }
+
     // Event Listeners
     modes.forEach(mode => {
         mode.addEventListener("click", displayController.displayNameInputScreen);
@@ -168,5 +195,5 @@ const gameController = (() => {
     returnBtns.forEach(returnBtn => {
         returnBtn.addEventListener("click", displayController.returntoMainScreen);
     });
-    modal.addEventListener("click", displayController.displayModal);
+    modal.addEventListener("click", resetGame);
 })(); 
