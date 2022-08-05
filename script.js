@@ -27,8 +27,14 @@ const displayController = (() => {
     const winnerName = document.querySelector(".winner-name");
 
     const displayWinner = (winner) => {
-        modal.classList.toggle("show-flex");
         winnerName.innerText = `${winner} Won`;
+    }
+
+    const displayModal = (winner) => {
+        modal.classList.toggle("show-flex");
+        if (winner !== undefined) {
+            displayWinner(winner);
+        }
     }
 
     const updatePlayerTurn = (nextTurn) => {
@@ -63,7 +69,7 @@ const displayController = (() => {
         displayNameInputScreen,
         displayGameBoardScreen,
         returntoMainScreen,
-        displayWinner,
+        displayModal,
     }
 })();
 
@@ -119,7 +125,7 @@ const gameBoard = (() => {
         const result = win().check(cells, currentTurn);
         if (result) {
             const winner = win().get(currentTurn);
-            displayController.displayWinner(winner);
+            displayController.displayModal(winner);
         }
     }
 
@@ -144,10 +150,11 @@ const gameController = (() => {
     const returnBtns = document.querySelectorAll(".return-btn");
     const playerXInput = document.querySelector("#player-x");
     const playerOInput = document.querySelector("#player-o");
+    const modal = document.querySelector(".modal");
 
     const startGame = () => {
         inputController.setplayersName(playerXInput.value, playerOInput.value);
-        displayController.updatePlayerTurn(playerXInput.value);
+        displayController.updatePlayerTurn('X');
         displayController.displayGameBoardScreen();
         gameBoard();
     }
@@ -161,4 +168,5 @@ const gameController = (() => {
     returnBtns.forEach(returnBtn => {
         returnBtn.addEventListener("click", displayController.returntoMainScreen);
     });
+    modal.addEventListener("click", displayController.displayModal);
 })(); 
