@@ -1,5 +1,6 @@
 const inputController = (() => {
     let playerX = null, playerO = null;
+    let humanPlayer = null;
     const setplayersName = (playerXInput, playerOInput) => {
         playerX = playerXInput;
         playerO = playerOInput;
@@ -9,9 +10,19 @@ const inputController = (() => {
         return { playerX, playerO };
     }
 
+    const setHumanPlayerName = (humanPlayerInput) => {
+        humanPlayer = humanPlayerInput;
+    }
+
+    const getHumanPlayerName = () => {
+        return humanPlayer;
+    }
+
     return {
         setplayersName,
+        setHumanPlayerName,
         getPlayersName,
+        getHumanPlayerName,
     }
 })();
 
@@ -34,7 +45,6 @@ const displayController = (() => {
     }
 
     const displayMessage = (msg) => {
-        console.log(msg)
         modalMsg.innerText = msg;
     }
 
@@ -84,9 +94,8 @@ const displayController = (() => {
     }
 })();
 
-const win = (() => {
-    const { playerX, playerO } = inputController.getPlayersName();
-
+const game = (() => {
+    const cells = document.querySelectorAll(".cell");
     const winningCombinations = [
         [0, 1, 2],
         [3, 4, 5],
@@ -97,8 +106,7 @@ const win = (() => {
         [0, 4, 8],
         [2, 4, 6],
     ];
-
-    const check = (cells, currentTurn) => {
+    const checkWin = (currentTurn) => {
         return winningCombinations.some(combination => {
             return combination.every(index => {
                 return cells[index].innerText === currentTurn;
@@ -106,23 +114,22 @@ const win = (() => {
         });
     }
 
-    const get = (currentTurn) => {
-        if (currentTurn === 'X') {
-            return playerX;
-        }
-        return playerO;
+    const checkDraw = () => {
+        return [...cells].every(cell => {
+            return cell.innerText === 'X' || cell.innerText === 'O';
+        });
     }
 
     return {
-        check,
-        get,
+        checkWin,
+        checkDraw,
     }
-});
+})();
 
-const gameBoard = (() => {
+const twoPlayerModeGameplay = (() => {
     let turnOfX = true;
-
     const cells = document.querySelectorAll(".cell");
+    const { playerX, playerO } = inputController.getPlayersName();
 
     const getTurn = () => {
         return turnOfX ? 'X' : 'O';
@@ -132,31 +139,90 @@ const gameBoard = (() => {
         turnOfX = !turnOfX;
     }
 
-    const checkWin = (currentTurn) => {
-        const result = win().check(cells, currentTurn);
-        if (result) {
-            const winner = win().get(currentTurn);
-            displayController.displayModal(`${winner} Won`);
-        }
-    }
-
-    const checkDraw = () => {
-        const result = [...cells].every(cell => {
-            return cell.innerText === 'X' || cell.innerText === 'O';
-        });
-        if (result) {
-            displayController.displayModal(`It's a Draw`);
-        }
-    }
-
     const markCell = (e) => {
         const currentTurn = getTurn();
         e.target.innerText = currentTurn === 'X' ? 'X' : 'O';
         switchTurns();
-        checkWin(currentTurn);
-        checkDraw(currentTurn);
+        const win = game.checkWin(currentTurn);
+        const draw = game.checkDraw();
+        if (win) {
+            const winner = currentTurn === 'X' ? playerX : playerO;
+            displayController.displayModal(`${winner} Won`);
+        }
+        else if (draw) {
+            displayController.displayModal(`It's a Draw`);
+        }
         const nextTurn = getTurn();
         displayController.updatePlayerTurn(nextTurn);
+    }
+
+    cells.forEach(cell => {
+        // once:true so that the move can't be alter once clicked
+        cell.addEventListener("click", markCell, { once: true });
+    });
+});
+
+const botModeGameplay = (() => {
+    const cells = document.querySelectorAll(".cell");
+    const humanPlayerName = inputController.getHumanPlayerName();
+
+    let turnOfX = true;
+
+    const getTurn = () => {
+        return turnOfX ? 'X' : 'O';
+    }
+
+    const switchTurns = () => {
+        turnOfX = !turnOfX;
+    }
+
+    const getEmptyCells = () => {
+        const emptyCells = [];
+        [...cells].forEach(cell => {
+            if (cell.innerText === '') {
+                emptyCells.push(cell);
+            }
+        });
+        return emptyCells;
+    };
+
+    const botMove = (e) => {
+        const emptyCellsArr = getEmptyCells();
+        const botInput = Math.ceil(Math.random() * emptyCellsArr.length) - 1;
+        if (botInput >= 0) {
+            emptyCellsArr[botInput].innerText = 'O';
+        }
+    }
+
+    const getResults = () => {
+        const currentTurn = getTurn();
+        const win = game.checkWin(currentTurn);
+        const draw = game.checkDraw();
+        if (win) {
+            const winner = currentTurn === 'X' ? humanPlayerName : 'Bot';
+            displayController.displayModal(`${winner} Won`);
+            return true;
+        }
+        else if (draw) {
+            displayController.displayModal(`It's a Draw`);
+            return true;
+        }
+        return false;
+    }
+
+    const markCell = (e) => {
+        e.target.innerText = 'X';   // Mark player's move
+        if (getResults()) {
+            return;
+        }
+        displayController.updatePlayerTurn('O');
+        setTimeout(() => {
+            switchTurns();
+            botMove(e);  // Mark bot's move
+            getResults();
+            switchTurns();
+            displayController.updatePlayerTurn('X');
+        }, 1000);
     }
 
     cells.forEach(cell => {
@@ -171,24 +237,40 @@ const gameController = (() => {
     const returnBtns = document.querySelectorAll(".return-btn");
     const playerXInput = document.querySelector("#player-x");
     const playerOInput = document.querySelector("#player-o");
+    const humanPlayerInput = document.querySelector("#human");
     const modal = document.querySelector(".modal");
 
+    let mode;
+    const setMode = (e) => {
+        mode = e.target.id;
+        displayController.displayNameInputScreen(e);
+    }
+    const gameplay = () => {
+        if (mode === "bot") {
+            inputController.setHumanPlayerName(humanPlayerInput.value);
+            botModeGameplay();
+        }
+        else {
+            inputController.setplayersName(playerXInput.value, playerOInput.value);
+            displayController.updatePlayerTurn('X');
+            twoPlayerModeGameplay();
+        }
+    }
+
     const startGame = () => {
-        inputController.setplayersName(playerXInput.value, playerOInput.value);
-        displayController.updatePlayerTurn('X');
         displayController.displayGameBoardScreen();
-        gameBoard();
+        gameplay();
     }
 
     const resetGame = () => {
         displayController.displayModal(null);
         displayController.updatePlayerTurn('X');
-        gameBoard();
+        gameplay();
     }
 
     // Event Listeners
     modes.forEach(mode => {
-        mode.addEventListener("click", displayController.displayNameInputScreen);
+        mode.addEventListener("click", setMode);
     });
     startBtn.addEventListener("click", startGame);
     // For return button on both the screens
