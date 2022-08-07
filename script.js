@@ -106,6 +106,7 @@ const game = (() => {
         [0, 4, 8],
         [2, 4, 6],
     ];
+
     const checkWin = (currentTurn) => {
         return winningCombinations.some(combination => {
             return combination.every(index => {
@@ -140,24 +141,27 @@ const twoPlayerModeGameplay = (() => {
     }
 
     const markCell = (e) => {
-        const currentTurn = getTurn();
+        let currentTurn = getTurn();
         e.target.innerText = currentTurn === 'X' ? 'X' : 'O';
-        switchTurns();
         const win = game.checkWin(currentTurn);
         const draw = game.checkDraw();
         if (win) {
             const winner = currentTurn === 'X' ? playerX : playerO;
             displayController.displayModal(`${winner} Won`);
+            return true;
         }
         else if (draw) {
             displayController.displayModal(`It's a Draw`);
+            return true;
         }
-        const nextTurn = getTurn();
-        displayController.updatePlayerTurn(nextTurn);
+        else {
+            switchTurns();
+            currentTurn = getTurn();
+            displayController.updatePlayerTurn(currentTurn);
+        }
     }
 
     cells.forEach(cell => {
-        // once:true so that the move can't be alter once clicked
         cell.addEventListener("click", markCell, { once: true });
     });
 });
@@ -165,6 +169,7 @@ const twoPlayerModeGameplay = (() => {
 const botModeGameplay = (() => {
     const cells = document.querySelectorAll(".cell");
     const humanPlayerName = inputController.getHumanPlayerName();
+    const board = document.querySelector(".board");
 
     let turnOfX = true;
 
@@ -186,7 +191,7 @@ const botModeGameplay = (() => {
         return emptyCells;
     };
 
-    const botMove = (e) => {
+    const botMove = () => {
         const emptyCellsArr = getEmptyCells();
         const botInput = Math.ceil(Math.random() * emptyCellsArr.length) - 1;
         if (botInput >= 0) {
@@ -211,18 +216,22 @@ const botModeGameplay = (() => {
     }
 
     const markCell = (e) => {
-        e.target.innerText = 'X';   // Mark player's move
-        if (getResults()) {
-            return;
+        if (e.target.innerText === '') {
+            e.target.innerText = 'X';   // Mark player's move
+            if (getResults()) {
+                return;
+            }
+            board.classList.toggle("stop-click");
+            displayController.updatePlayerTurn('O');
+            setTimeout(() => {
+                switchTurns();
+                botMove(e);  // Mark bot's move
+                getResults();
+                switchTurns();
+                displayController.updatePlayerTurn('X');
+                board.classList.toggle("stop-click");
+            }, 1000);
         }
-        displayController.updatePlayerTurn('O');
-        setTimeout(() => {
-            switchTurns();
-            botMove(e);  // Mark bot's move
-            getResults();
-            switchTurns();
-            displayController.updatePlayerTurn('X');
-        }, 1000);
     }
 
     cells.forEach(cell => {
@@ -249,6 +258,7 @@ const gameController = (() => {
     const gameplay = () => {
         if (mode === "bot") {
             inputController.setHumanPlayerName(humanPlayerInput.value);
+            displayController.updatePlayerTurn('X');
             botModeGameplay();
         }
         else {

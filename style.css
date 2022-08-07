@@ -210,3 +210,7 @@ input[type="button"].return-btn {
     flex-direction: column;
     align-items: center;
 }
+
+.stop-click {
+    pointer-events: none;
+}
