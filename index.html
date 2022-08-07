@@ -24,16 +24,21 @@
         <div class="name-input-screen">
             <input type="button" value="Return" class="return-btn btn">
             <div class="two-player-mode-input input-name">
-                <label for="player-x">PLAYER 'X'</label>
-                <input type="text" name="player-x" id="player-x">
-                <label for="player-o">PLAYER 'O'</label>
-                <input type="text" name="player-o" id="player-o">
+                <form action="" class="name-form">
+                    <label for="player-x">PLAYER 'X'</label>
+                    <input type="text" name="playerX" id="player-x" required>
+                    <label for="player-o">PLAYER 'O'</label>
+                    <input type="text" name="playerO" id="player-o" required>
+                    <input type="submit" value="Start" class="start-btn btn">
+                </form>
             </div>
             <div class="bot-mode-input input-name">
-                <label for="human">HUMAN</label>
-                <input type="text" name="human" id="human">
+                <form action="" class="name-form">
+                    <label for="human">HUMAN</label>
+                    <input type="text" name="human" id="human" required>
+                    <input type="submit" value="Start" class="start-btn btn">
+                </form>
             </div>
-            <input type="button" value="Start" class="btn" id="start-btn">
         </div>
         <div class="game-board-screen">
             <input type="button" value="Return" class="return-btn btn">

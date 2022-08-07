@@ -233,8 +233,8 @@ const botModeGameplay = (() => {
 
 const gameController = (() => {
     const modes = document.querySelectorAll(".mode");
-    const startBtn = document.querySelector("#start-btn");
     const returnBtns = document.querySelectorAll(".return-btn");
+    const nameForms = document.querySelectorAll(".name-form");
     const playerXInput = document.querySelector("#player-x");
     const playerOInput = document.querySelector("#player-o");
     const humanPlayerInput = document.querySelector("#human");
@@ -245,6 +245,7 @@ const gameController = (() => {
         mode = e.target.id;
         displayController.displayNameInputScreen(e);
     }
+
     const gameplay = () => {
         if (mode === "bot") {
             inputController.setHumanPlayerName(humanPlayerInput.value);
@@ -257,7 +258,8 @@ const gameController = (() => {
         }
     }
 
-    const startGame = () => {
+    const startGame = (e) => {
+        e.preventDefault();
         displayController.displayGameBoardScreen();
         gameplay();
     }
@@ -272,7 +274,9 @@ const gameController = (() => {
     modes.forEach(mode => {
         mode.addEventListener("click", setMode);
     });
-    startBtn.addEventListener("click", startGame);
+    nameForms.forEach(nameForm => {
+        nameForm.addEventListener("submit", startGame);
+    });
     // For return button on both the screens
     returnBtns.forEach(returnBtn => {
         returnBtn.addEventListener("click", displayController.returntoMainScreen);
