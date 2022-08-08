@@ -94,6 +94,25 @@ const displayController = (() => {
     }
 })();
 
+const confetti = (() => {
+    const confettiContainer = document.querySelector(".modal");
+    const animItem = bodymovin.loadAnimation({
+        wrapper: confettiContainer,
+        animType: "svg",
+        loop: true,
+        autoplay: true,
+        path: "https://assets4.lottiefiles.com/packages/lf20_gz82sbil.json",
+        rendererSettings: {
+            preserveAspectRatio: "xMidYMid slice",
+            className: "confetti-canvas",
+        },
+    });
+
+    return {
+        animItem,
+    }
+})();
+
 const game = (() => {
     const cells = document.querySelectorAll(".cell");
     const winningCombinations = [
@@ -148,9 +167,11 @@ const twoPlayerModeGameplay = (() => {
         if (win) {
             const winner = currentTurn === 'X' ? playerX : playerO;
             displayController.displayModal(`${winner} Won`);
+            confetti.animItem.play();
             return true;
         }
         else if (draw) {
+            confetti.animItem.stop();
             displayController.displayModal(`It's a Draw`);
             return true;
         }
@@ -206,9 +227,11 @@ const botModeGameplay = (() => {
         if (win) {
             const winner = currentTurn === 'X' ? humanPlayerName : 'Bot';
             displayController.displayModal(`${winner} Won`);
+            confetti.animItem.play();
             return true;
         }
         else if (draw) {
+            confetti.animItem.stop();
             displayController.displayModal(`It's a Draw`);
             return true;
         }

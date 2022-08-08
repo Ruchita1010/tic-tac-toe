@@ -169,6 +169,13 @@ input[type="button"].return-btn {
     animation: blur 0.3s forwards;
 }
 
+.modal-msg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 @keyframes blur {
     0% {
         backdrop-filter: blur(2px);
