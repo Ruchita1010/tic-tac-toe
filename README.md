@@ -6,6 +6,8 @@ Classic Tic Tac Toe game(also called Noughts and Crosses) created using HTML, CS
     - TwoPlayerMode
     - BotMode
 - Simple Interface
+- Beautiful confetti 🎉
+- Sound Effects
 
 ## Learnings
 - Factory Function
@@ -21,7 +23,6 @@ Classic Tic Tac Toe game(also called Noughts and Crosses) created using HTML, CS
 - Add unbeatable AI using the minimax algorithm
 - Add levels: easy, medium, hard
 - Add dark/light theme toggle
-- Sound Effects
 
 ## Preview
 ![image](./preview-images/tic-tac-toe.png)
