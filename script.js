@@ -94,8 +94,11 @@ const displayController = (() => {
     }
 })();
 
-const confetti = (() => {
+const effects = (() => {
     const confettiContainer = document.querySelector(".modal");
+    const winSound = document.querySelector("#sound-effect-win");
+    const drawSound = document.querySelector("#sound-effect-draw");
+
     const animItem = bodymovin.loadAnimation({
         wrapper: confettiContainer,
         animType: "svg",
@@ -110,11 +113,14 @@ const confetti = (() => {
 
     return {
         animItem,
+        winSound,
+        drawSound,
     }
 })();
 
 const game = (() => {
     const cells = document.querySelectorAll(".cell");
+
     const winningCombinations = [
         [0, 1, 2],
         [3, 4, 5],
@@ -167,12 +173,15 @@ const twoPlayerModeGameplay = (() => {
         if (win) {
             const winner = currentTurn === 'X' ? playerX : playerO;
             displayController.displayModal(`${winner} Won`);
-            confetti.animItem.play();
+            effects.animItem.play();
+            effects.winSound.play();
+            effects.winSound.setAttribute("loop", true);
             return true;
         }
         else if (draw) {
-            confetti.animItem.stop();
+            effects.animItem.stop();
             displayController.displayModal(`It's a Draw`);
+            effects.drawSound.play();
             return true;
         }
         else {
@@ -227,12 +236,15 @@ const botModeGameplay = (() => {
         if (win) {
             const winner = currentTurn === 'X' ? humanPlayerName : 'Bot';
             displayController.displayModal(`${winner} Won`);
-            confetti.animItem.play();
+            effects.animItem.play();
+            effects.winSound.play();
+            effects.winSound.setAttribute("loop", true);
             return true;
         }
         else if (draw) {
-            confetti.animItem.stop();
+            effects.animItem.stop();
             displayController.displayModal(`It's a Draw`);
+            effects.drawSound.play();
             return true;
         }
         return false;
@@ -298,6 +310,7 @@ const gameController = (() => {
     }
 
     const resetGame = () => {
+        effects.winSound.removeAttribute("loop");
         displayController.displayModal(null);
         displayController.updatePlayerTurn('X');
         gameplay();
